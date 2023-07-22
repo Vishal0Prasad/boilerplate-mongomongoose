@@ -182,29 +182,22 @@ const removeManyPeople = (done) => {
 
   // done(null /*, data*/);
 };
-function compare( a, b ) {
-  if ( a.name < b.name ){
-    return -1;
-  }
-  if ( a.name > b.name ){
-    return 1;
-  }
-  return 0;
-}
+
 const queryChain = (done) => {
   const foodToSearch = "burrito";
   Person.find({
     favoriteFoods: foodToSearch
   })
-  .then((docs) => {
-    return docs.sort(compare);
-  })
-  .then((docs) => {
-    return docs.slice(0,2);
-  })
-  .select()
-  .exec()
-  done(null /*, data*/);
+  .sort({name:1})
+  .limit(2)
+  .select({ age: 0})
+  .exec(function(err, data){
+    if(err){
+      console.log(err);
+      done(err);
+    }
+    done(null, data);
+  });
 };
 
 /** **Well Done !!**
